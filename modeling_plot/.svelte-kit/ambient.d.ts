@@ -32,7 +32,7 @@ declare module '$env/static/private' {
 	export const INIT_CWD: string;
 	export const TERM: string;
 	export const SHELL: string;
-	export const npm_config_metrics_registry: string;
+	export const npm_config_open: string;
 	export const HOMEBREW_REPOSITORY: string;
 	export const TMPDIR: string;
 	export const npm_config_global_prefix: string;
@@ -53,12 +53,9 @@ declare module '$env/static/private' {
 	export const __CF_USER_TEXT_ENCODING: string;
 	export const npm_execpath: string;
 	export const _CE_CONDA: string;
-	export const CONDA_ROOT: string;
-	export const CONDA_PREFIX_1: string;
 	export const PATH: string;
 	export const npm_package_json: string;
 	export const _: string;
-	export const CONDA_PREFIX_2: string;
 	export const npm_config_userconfig: string;
 	export const npm_config_init_module: string;
 	export const USER_ZDOTDIR: string;
@@ -70,6 +67,7 @@ declare module '$env/static/private' {
 	export const EDITOR: string;
 	export const npm_package_name: string;
 	export const LANG: string;
+	export const npm_config_npm_version: string;
 	export const VSCODE_GIT_ASKPASS_EXTRA_ARGS: string;
 	export const XPC_FLAGS: string;
 	export const npm_config_node_gyp: string;
@@ -131,7 +129,7 @@ declare module '$env/dynamic/private' {
 		INIT_CWD: string;
 		TERM: string;
 		SHELL: string;
-		npm_config_metrics_registry: string;
+		npm_config_open: string;
 		HOMEBREW_REPOSITORY: string;
 		TMPDIR: string;
 		npm_config_global_prefix: string;
@@ -152,12 +150,9 @@ declare module '$env/dynamic/private' {
 		__CF_USER_TEXT_ENCODING: string;
 		npm_execpath: string;
 		_CE_CONDA: string;
-		CONDA_ROOT: string;
-		CONDA_PREFIX_1: string;
 		PATH: string;
 		npm_package_json: string;
 		_: string;
-		CONDA_PREFIX_2: string;
 		npm_config_userconfig: string;
 		npm_config_init_module: string;
 		USER_ZDOTDIR: string;
@@ -169,6 +164,7 @@ declare module '$env/dynamic/private' {
 		EDITOR: string;
 		npm_package_name: string;
 		LANG: string;
+		npm_config_npm_version: string;
 		VSCODE_GIT_ASKPASS_EXTRA_ARGS: string;
 		XPC_FLAGS: string;
 		npm_config_node_gyp: string;
