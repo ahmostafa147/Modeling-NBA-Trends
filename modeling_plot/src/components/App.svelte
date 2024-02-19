@@ -1,63 +1,148 @@
 <script>
-    import { onMount } from 'svelte';
-    import * as d3 from 'd3';
-  
-    let data = [];
-  
-    onMount(() => {
-      d3.csv('src/DSC106_NBA.csv').then((csvData) => {
-        data = csvData;
-        console.log('huh')
-  
-        // Call the function to render the bar chart
-        renderBarChart();
-      });
+  import { onMount } from "svelte";
+  import * as d3 from "d3";
+
+  let data = [];
+  let keys = [];
+  let teams = [];
+  let values = [];
+  let year = 1946;
+  let interval;
+  let playing = false;
+  let maxVal = 150;
+  let svg;
+  let x;
+  let y;
+  let bars;
+  let height;
+
+  onMount(() => {
+    d3.csv("src/DSC106_NBA.csv").then((csvData) => {
+      data = csvData;
+      renderBarChart(year);
     });
-  
-    function renderBarChart() {
-      const margin = { top: 20, right: 20, bottom: 30, left: 40 };
-      const width = 1000 - margin.left - margin.right;
-      const height = 600 - margin.top - margin.bottom;
-  
-      const svg = d3.select('#chart')
-        .append('svg')
-        .attr('width', width + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom)
-        .append('g')
-        .attr('transform', `translate(${margin.left},${margin.top})`);
-  
-      const x = d3.scaleBand()
-        .range([0, width])
-        .padding(0.1)
-        .domain(data.map(d => d.Year));
-  
-      const y = d3.scaleLinear()
-        .range([height, 0])
-        .domain([0, d3.max(data, d => +d['Boston Celtics'])]);
-  
-      svg.append('g')
-        .attr('transform', `translate(0,${height})`)
-        .call(d3.axisBottom(x));
-  
-      svg.append('g')
-        .call(d3.axisLeft(y));
-  
-      svg.selectAll('rect')
-        .data(data)
-        .enter().append('rect')
-        .attr('x', d => x(d.Year))
-        .attr('y', d => y(+d['Boston Celtics']))
-        .attr('width', x.bandwidth())
-        .attr('height', d => height - y(+d['Boston Celtics']))
-        .attr('fill', 'green');
-    }
-  </script>
-  
-  <style>
-    /* Add your styles here */
-  </style>
-  
-  <main>
-    <div id="chart"></div>
-  </main>
-  
+  });
+
+  function renderBarChart(year) {
+    teams = data.filter((d) => d.Year == year);
+    keys = Object.keys(teams[0]).filter((key) => key !== "Year");
+    values = Object.entries(teams[0])
+      .filter((entry) => entry[0] !== "Year")
+      .map(([key, value]) => {
+        return { team: key, score: value };
+      });
+
+    const margin = { top: 20, right: 20, bottom: 100, left: 40 };
+    const width = 1000 - margin.left - margin.right;
+    height = 600 - margin.top - margin.bottom;
+
+    svg = d3
+      .select("#chart")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    x = d3.scaleBand().domain(keys).range([0, width]).padding(0.1);
+
+    y = d3
+      .scaleLinear()
+      .domain([
+        0,
+        maxVal,
+      ])
+      .range([height, 0]);
+
+    svg
+      .append("g")
+      .attr("transform", `translate(0,${height})`)
+      .call(d3.axisBottom(x))
+      .selectAll("text")
+      .attr("transform", "rotate(-45)")
+      .style("text-anchor", "end");
+
+    svg.append("g").call(d3.axisLeft(y));
+
+    svg
+      .selectAll("rect")
+      .data(values)
+      .enter()
+      .append("rect")
+      .attr("x", (d) => x(d.team))
+      .attr("y", (d) => y(d.score))
+      .attr("width", x.bandwidth())
+      .attr("height", (d) => height - y(d.score))
+      .attr("fill", "steelblue");
+  }
+
+  function updateBars(newyr) {
+    teams = data.filter((d) => d.Year == newyr);
+    keys = Object.keys(teams[0]).filter((key) => key !== "Year");
+    values = Object.entries(teams[0])
+      .filter((entry) => entry[0] !== "Year")
+      .map(([key, value]) => {
+        return { team: key, score: value };
+      });
+
+    bars = svg.selectAll("rect").data(values);
+
+    bars.enter()
+      .append("rect")
+      .attr("x", (d) => x(d.team))
+      .attr("width", x.bandwidth())
+      .merge(bars)
+      .transition()
+      .duration(800)
+      .attr("y", (d) => y(d.score))
+      .attr("height", (d) => height - y(d.score))
+      .attr("fill", "steelblue");
+
+    bars.exit().remove();
+}
+
+
+  function updateYear(newYear) {
+    year = newYear;
+    updateBars(year);
+  }
+
+  function play() {
+    playing = true;
+    interval = setInterval(() => {
+      if (year < 2022) {
+        year++;
+        updateBars(year);
+      } else {
+        stop(); 
+      }
+    }, 1000);
+  }
+
+  function stop() {
+    clearInterval(interval);
+    playing = false;
+  }
+</script>
+
+<main>
+  <div id="chart"></div>
+  <div>
+    <input
+      type="range"
+      min="1946"
+      max="2022"
+      value={year}
+      on:input={(e) => updateYear(+e.target.value)}
+    />
+    {#if playing}
+      <button on:click={stop}>Stop</button>
+    {:else}
+      <button on:click={play}>Play</button>
+    {/if}
+  </div>
+</main>
+
+<style>
+  /* Add your styles here */
+</style>
