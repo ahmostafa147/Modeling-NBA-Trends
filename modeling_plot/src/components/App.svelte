@@ -362,7 +362,7 @@
         alt="NBA"
       />
     </h1>
-    <h2 style="text-align: left;">NBA Average Points per Game in {year}</h2>
+    <h2 style="text-align: left;">NBA Teams Average Points per Game in {year}</h2>
     <div id="overlay">
       <!-- svelte-ignore a11y-label-has-associated-control -->
       <label>{year}</label>
