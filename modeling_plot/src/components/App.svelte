@@ -1,5 +1,4 @@
 <script>
-    
   import { onMount } from "svelte";
   import * as d3 from "d3";
 
@@ -18,13 +17,14 @@
   let bars;
   let height;
 
+  let tooltip;
+
   onMount(() => {
     d3.csv("src/DSC106_NBA.csv").then((csvData) => {
       data = csvData;
       renderBarChart(year);
     });
   });
-
 
   function renderBarChart(year) {
     teams = data.filter((d) => d.Year == year);
@@ -49,13 +49,7 @@
 
     x = d3.scaleBand().domain(keys).range([0, width]).padding(0.1);
 
-    y = d3
-      .scaleLinear()
-      .domain([
-        minVal,
-        maxVal,
-      ])
-      .range([height, 0]);
+    y = d3.scaleLinear().domain([minVal, maxVal]).range([height, 0]);
 
     svg
       .append("g")
@@ -77,64 +71,69 @@
       .attr("width", x.bandwidth())
       .attr("height", (d) => height - y(d.score))
       .attr("fill", "steelblue")
-    //   .on('mouseover', (event, d) => {
-    //     const tooltip = svg.append('text')
-    //       .attr('class', 'tooltip')
-    //       .attr('x', x(d.team) + x.bandwidth() / 2)
-    //       .attr('y', y(d.score) - 5)
-    //       .attr('text-anchor', 'middle')
-    //       .style('font-size', '12px')
-    //       .style('fill', 'black')
-    //       .text(d.score);
-    //   })
-    //   .on('mouseout', (event) => {
-    //     svg.select('.tooltip').remove();
-    //   });
-    .on('mouseover', (event, d) => {
-        const tooltip = svg.append('g')
-          .attr('class', 'tooltip');
+      //   .on('mouseover', (event, d) => {
+      //     const tooltip = svg.append('text')
+      //       .attr('class', 'tooltip')
+      //       .attr('x', x(d.team) + x.bandwidth() / 2)
+      //       .attr('y', y(d.score) - 5)
+      //       .attr('text-anchor', 'middle')
+      //       .style('font-size', '12px')
+      //       .style('fill', 'black')
+      //       .text(d.score);
+      //   })
+      //   .on('mouseout', (event) => {
+      //     svg.select('.tooltip').remove();
+      //   });
+      .on("mouseover", (event, d) => {
+        tooltip = svg.append("g").attr("class", "tooltip");
 
-        tooltip.append('rect')
-          .attr('width', 130)
-          .attr('height', 60)
-          .attr('fill', 'rgba(255, 255, 255, 0.8)')
-          .attr('stroke', 'black')
-          .attr('stroke-width', 1);
+        tooltip
+          .append("rect")
+          .attr("width", 130)
+          .attr("height", 60)
+          .attr("fill", "rgba(255, 255, 255, 0.8)")
+          .attr("stroke", "black")
+          .attr("stroke-width", 1);
 
-        tooltip.append('text')
-          .attr('x', 15)
-          .attr('y', 20)
-          .attr('dy', '0.35em')
-          .attr('text-anchor', 'start')
-          .style('font-size', '12px')
+        tooltip
+          .append("text")
+          .attr("x", 15)
+          .attr("y", 20)
+          .attr("dy", "0.35em")
+          .attr("text-anchor", "start")
+          .style("font-size", "12px")
           .text(`${d.team}`);
-        
-        tooltip.append('text')
-          .attr('x', 15)
-          .attr('y', 40)
-          .attr('dy', '0.35em')
-          .attr('text-anchor', 'start')
-          .style('font-size', '12px')
+
+        tooltip
+          .append("text")
+          .attr("x", 15)
+          .attr("y", 40)
+          .attr("dy", "0.35em")
+          .attr("text-anchor", "start")
+          .style("font-size", "12px")
           .text(`PPG: ${d.score}`);
 
         updateTooltipPosition(event);
       })
-      .on('mousemove', (event, d) => {
+      .on("mousemove", (event, d) => {
         updateTooltipPosition(event);
       })
-      .on('mouseout', (event) => {
-        svg.select('.tooltip').remove();
+      .on("mouseout", (event) => {
+        svg.select(".tooltip").remove();
       });
   }
 
   function updateTooltipPosition(event) {
-    const tooltip = svg.select('.tooltip');
+    tooltip = svg.select(".tooltip");
     const tooltipWidth = 100;
     const tooltipHeight = 40;
     const mouseX = event.pageX;
     const mouseY = event.pageY;
 
-    tooltip.attr('transform', `translate(${mouseX-40}, ${mouseY - tooltipHeight - 10})`);
+    tooltip.attr(
+      "transform",
+      `translate(${mouseX - 270}, ${mouseY - tooltipHeight - 230})`,
+    );
   }
 
   function updateBars(newyr) {
@@ -148,7 +147,8 @@
 
     bars = svg.selectAll("rect").data(values);
 
-    bars.enter()
+    bars
+      .enter()
       .append("rect")
       .attr("x", (d) => x(d.team))
       .attr("width", x.bandwidth())
@@ -158,45 +158,46 @@
       .attr("y", (d) => y(d.score))
       .attr("height", (d) => height - y(d.score))
       .attr("fill", "steelblue")
-      .on('mouseover', (event, d) => {
-        const tooltip = svg.append('g')
-          .attr('class', 'tooltip');
+      .on("mouseover", (event) => {
+        tooltip = svg.append("g").attr("class", "tooltip");
 
-        tooltip.append('rect')
-          .attr('width', 130)
-          .attr('height', 60)
-          .attr('fill', 'rgba(255, 255, 255, 0.8)')
-          .attr('stroke', 'black')
-          .attr('stroke-width', 1);
+        tooltip
+          .append("rect")
+          .attr("width", 130)
+          .attr("height", 60)
+          .attr("fill", "rgba(255, 255, 255, 0.8)")
+          .attr("stroke", "black")
+          .attr("stroke-width", 1);
 
-        tooltip.append('text')
-          .attr('x', 15)
-          .attr('y', 20)
-          .attr('dy', '0.35em')
-          .attr('text-anchor', 'start')
-          .style('font-size', '12px')
+        tooltip
+          .append("text")
+          .attr("x", 15)
+          .attr("y", 20)
+          .attr("dy", "0.35em")
+          .attr("text-anchor", "start")
+          .style("font-size", "12px")
           .text(`${d.team}`);
-        
-        tooltip.append('text')
-          .attr('x', 15)
-          .attr('y', 40)
-          .attr('dy', '0.35em')
-          .attr('text-anchor', 'start')
-          .style('font-size', '12px')
+
+        tooltip
+          .append("text")
+          .attr("x", 15)
+          .attr("y", 40)
+          .attr("dy", "0.35em")
+          .attr("text-anchor", "start")
+          .style("font-size", "12px")
           .text(`PPG: ${d.score}`);
 
         updateTooltipPosition(event);
       })
-      .on('mousemove', (event, d) => {
+      .on("mousemove", (event, d) => {
         updateTooltipPosition(event);
       })
-      .on('mouseout', (event) => {
-        svg.select('.tooltip').remove();
+      .on("mouseout", (event) => {
+        svg.select(".tooltip").remove();
       });
 
     bars.exit().remove();
-}
-
+  }
 
   function updateYear(newYear) {
     year = newYear;
@@ -210,7 +211,7 @@
         year++;
         updateBars(year);
       } else {
-        stop(); 
+        stop();
       }
     }, 1000);
   }
@@ -222,49 +223,67 @@
 </script>
 
 <main>
-  <div id="chart"></div>
-  <div id="overlay">
-    <label>{year}</label>
-    <input
-      type="range"
-      min="1950"
-      max="2022"
-      value={year}
-      on:input={(e) => updateYear(+e.target.value)}
-    />
-    {#if playing}
-      <button on:click={stop}>Stop</button>
-    {:else}
-      <button on:click={play}>Play</button>
-    {/if}
+  <div id="chart">
+    <h1>NBA Average Point per Game in the Year - {year}</h1>
+    <div id="overlay">
+      <!-- svelte-ignore a11y-label-has-associated-control -->
+      <label>{year}</label>
+      <input
+        type="range"
+        min="1950"
+        max="2022"
+        value={year}
+        on:input={(e) => updateYear(+e.target.value)}
+      />
+      {#if playing}
+        <button on:click={stop}>Stop</button>
+      {:else}
+        <button on:click={play}>Play</button>
+      {/if}
+    </div>
   </div>
 </main>
 
 <style>
-#overlay {
-	font-size: 0.9em;
-	background-color: rgba(255, 255, 255, 0.4);
-	position: absolute;
-	min-width:250px;
-	width: 15%;
-	top: 10px;
-	right: 10px;
-	padding: 10px;
-	z-index: 3;
- }
- input {
-	display: inline-block;
-	width: 100%;
-	position: relative;
-	margin: 0;
-	cursor: pointer;
- }
- label {
-	font-size: 1.5em;
-	font-family: sans-serif;
-	font-weight: bold;
- }
-#chart {
+  #overlay {
+    font-size: 0.9em;
+    background-color: rgba(255, 255, 255, 0.4);
+    position: absolute;
+    min-width: 250px;
+    width: 15%;
+    top: 10px;
+    right: 10px;
+    padding: 10px;
+    z-index: 3;
+  }
+  input {
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    margin: 0;
+    cursor: pointer;
+  }
+  label {
+    font-size: 1.5em;
+    font-family: sans-serif;
+    font-weight: bold;
+  }
+  #chart {
     margin: auto;
-}
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+
+  h1 {
+    font-size: 35px;
+    font-weight: 600;
+    background-image: linear-gradient(to left, #1b0db0, #c82222);
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+  }
+ 
 </style>
