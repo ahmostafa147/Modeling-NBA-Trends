@@ -78,7 +78,7 @@
 
 
 
-    const margin = { top: 20, right: 120, bottom: 100, left: 60 };
+    const margin = { top: 20, right: 120, bottom: 150, left: 60 };
     const width = 1400 - margin.left - margin.right;
     height = 600 - margin.top - margin.bottom;
 
@@ -125,44 +125,9 @@
       .attr("y", (d) => y(d.score))
       .attr("width", x.bandwidth())
       .attr("height", (d) => height - y(d.score))
-      .attr("fill", "steelblue")
-    //   .on("mouseover", (event, d) => {
-    //     tooltip = svg.append("g").attr("class", "tooltip");
-
-    //     tooltip
-    //       .append("rect")
-    //       .attr("width", 130)
-    //       .attr("height", 60)
-    //       .attr("fill", "rgba(255, 255, 255, 0.8)")
-    //       .attr("stroke", "black")
-    //       .attr("stroke-width", 1);
-
-    //     tooltip
-    //       .append("text")
-    //       .attr("x", 15)
-    //       .attr("y", 20)
-    //       .attr("dy", "0.35em")
-    //       .attr("text-anchor", "start")
-    //       .style("font-size", "12px")
-    //       .text(`${d.team}`);
-
-    //     tooltip
-    //       .append("text")
-    //       .attr("x", 15)
-    //       .attr("y", 40)
-    //       .attr("dy", "0.35em")
-    //       .attr("text-anchor", "start")
-    //       .style("font-size", "12px")
-    //       .text(`PPG: ${d.score}`);
-
-    //     updateTooltipPosition(event);
-    //   })
-    //   .on("mousemove", (event, d) => {
-    //     updateTooltipPosition(event, d);
-    //   })
-    //   .on("mouseout", (event) => {
-    //     svg.select(".tooltip").remove();
-    //   });
+      .attr("fill", "#FA8320")
+      .attr("stroke", "black")
+      .attr("stroke-width", 2)
     .on('mouseover', (event, d) => {
         const tooltipWidth = 120;
         const tooltipHeight = 60;
@@ -200,6 +165,20 @@
       .on('mouseout', (event) => {
         svg.select('.tooltip').remove();
       });
+      svg.append("text")
+        .attr("transform", `translate(${width / 2}, ${height + 120})`) // Adjust the position as needed
+        .style("text-anchor", "middle")
+        .text("Teams")
+        .style("font-family", "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif");
+
+        svg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 - margin.left) // Adjust the position as needed
+            .attr("x", 0 - (height / 2))
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .text("Average Points Per Game")
+            .style("font-family", "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif");
   }
 
   function updateTooltipPosition(event, d) {
@@ -250,7 +229,10 @@
       .duration(800)
       .attr("y", (d) => y(d.score))
       .attr("height", (d) => height - y(d.score))
-      .attr("fill", "steelblue")
+      .attr("fill", "#FA8320")
+      .attr("stroke", "black")
+      .attr("stroke-width", 2); 
+
         logos = svg
       .selectAll(".logo")
       .data(values);
@@ -277,23 +259,6 @@
           .attr("stroke", "black")
           .attr("stroke-width", 1);
 
-        // tooltip
-        //   .append("text")
-        //   .attr("x", 15)
-        //   .attr("y", 20)
-        //   .attr("dy", "0.35em")
-        //   .attr("text-anchor", "start")
-        //   .style("font-size", "12px")
-        //   .text(`${d.team}`);
-
-        // tooltip
-        //   .append("text")
-        //   .attr("x", 15)
-        //   .attr("y", 40)
-        //   .attr("dy", "0.35em")
-        //   .attr("text-anchor", "start")
-        //   .style("font-size", "12px")
-        //   .text(`PPG: ${d.score}`);
         tooltip.append('text')
           .attr('x', tooltipWidth / 2)
           .attr('y', tooltipHeight / 2 - 10)
@@ -348,7 +313,7 @@
 
 <main>
   <div id="chart">
-    <h1>Is Defense Dying in the NBA?</h1>
+    <h1>Is Defense Dying in the NBA?<img src='https://images.ctfassets.net/h8q6lxmb5akt/5qXnOINbPrHKXWa42m6NOa/421ab176b501f5bdae71290a8002545c/nba-logo_2x.png', alt='NBA'></h1>
     <h2 style="text-align: left;">NBA Average Points per Game in {year}</h2>
     <div id="overlay">
       <!-- svelte-ignore a11y-label-has-associated-control -->
@@ -372,7 +337,7 @@
 <style>
   #overlay {
     font-size: 0.9em;
-    background-color: rgba(255, 255, 255, 0.4);
+    /* background-color: rgba(157, 152, 152, 0.2); */
     position: absolute;
     min-width: 250px;
     width: 15%;
@@ -404,12 +369,19 @@
 
   h2 {
     font-size: 24px;
-    color: #FA8320;
+    /* color: #FA8320; */
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
   }
 
   h1 {
     font-size: 36px;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    /* color: #FA8320; */
+  }
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20%;
   }
 </style>
