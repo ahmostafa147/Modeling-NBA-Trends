@@ -1,4 +1,5 @@
 <script>
+    
   import { onMount } from "svelte";
   import * as d3 from "d3";
 
@@ -9,8 +10,8 @@
   let year = 1950;
   let interval;
   let playing = false;
-  let minVal = 75;
-  let maxVal = 125;
+  let minVal = 70;
+  let maxVal = 130;
   let svg;
   let x;
   let y;
@@ -23,6 +24,7 @@
       renderBarChart(year);
     });
   });
+
 
   function renderBarChart(year) {
     teams = data.filter((d) => d.Year == year);
@@ -74,7 +76,65 @@
       .attr("y", (d) => y(d.score))
       .attr("width", x.bandwidth())
       .attr("height", (d) => height - y(d.score))
-      .attr("fill", "steelblue");
+      .attr("fill", "steelblue")
+    //   .on('mouseover', (event, d) => {
+    //     const tooltip = svg.append('text')
+    //       .attr('class', 'tooltip')
+    //       .attr('x', x(d.team) + x.bandwidth() / 2)
+    //       .attr('y', y(d.score) - 5)
+    //       .attr('text-anchor', 'middle')
+    //       .style('font-size', '12px')
+    //       .style('fill', 'black')
+    //       .text(d.score);
+    //   })
+    //   .on('mouseout', (event) => {
+    //     svg.select('.tooltip').remove();
+    //   });
+    .on('mouseover', (event, d) => {
+        const tooltip = svg.append('g')
+          .attr('class', 'tooltip');
+
+        tooltip.append('rect')
+          .attr('width', 130)
+          .attr('height', 60)
+          .attr('fill', 'rgba(255, 255, 255, 0.8)')
+          .attr('stroke', 'black')
+          .attr('stroke-width', 1);
+
+        tooltip.append('text')
+          .attr('x', 15)
+          .attr('y', 20)
+          .attr('dy', '0.35em')
+          .attr('text-anchor', 'start')
+          .style('font-size', '12px')
+          .text(`${d.team}`);
+        
+        tooltip.append('text')
+          .attr('x', 15)
+          .attr('y', 40)
+          .attr('dy', '0.35em')
+          .attr('text-anchor', 'start')
+          .style('font-size', '12px')
+          .text(`PPG: ${d.score}`);
+
+        updateTooltipPosition(event);
+      })
+      .on('mousemove', (event, d) => {
+        updateTooltipPosition(event);
+      })
+      .on('mouseout', (event) => {
+        svg.select('.tooltip').remove();
+      });
+  }
+
+  function updateTooltipPosition(event) {
+    const tooltip = svg.select('.tooltip');
+    const tooltipWidth = 100;
+    const tooltipHeight = 40;
+    const mouseX = event.pageX;
+    const mouseY = event.pageY;
+
+    tooltip.attr('transform', `translate(${mouseX-40}, ${mouseY - tooltipHeight - 10})`);
   }
 
   function updateBars(newyr) {
@@ -97,7 +157,42 @@
       .duration(800)
       .attr("y", (d) => y(d.score))
       .attr("height", (d) => height - y(d.score))
-      .attr("fill", "steelblue");
+      .attr("fill", "steelblue")
+      .on('mouseover', (event, d) => {
+        const tooltip = svg.append('g')
+          .attr('class', 'tooltip');
+
+        tooltip.append('rect')
+          .attr('width', 130)
+          .attr('height', 60)
+          .attr('fill', 'rgba(255, 255, 255, 0.8)')
+          .attr('stroke', 'black')
+          .attr('stroke-width', 1);
+
+        tooltip.append('text')
+          .attr('x', 15)
+          .attr('y', 20)
+          .attr('dy', '0.35em')
+          .attr('text-anchor', 'start')
+          .style('font-size', '12px')
+          .text(`${d.team}`);
+        
+        tooltip.append('text')
+          .attr('x', 15)
+          .attr('y', 40)
+          .attr('dy', '0.35em')
+          .attr('text-anchor', 'start')
+          .style('font-size', '12px')
+          .text(`PPG: ${d.score}`);
+
+        updateTooltipPosition(event);
+      })
+      .on('mousemove', (event, d) => {
+        updateTooltipPosition(event);
+      })
+      .on('mouseout', (event) => {
+        svg.select('.tooltip').remove();
+      });
 
     bars.exit().remove();
 }
@@ -169,4 +264,7 @@
 	font-family: sans-serif;
 	font-weight: bold;
  }
+#chart {
+    margin: auto;
+}
 </style>
