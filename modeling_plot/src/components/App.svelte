@@ -16,6 +16,9 @@
   let y;
   let bars;
   let height;
+  let logos;
+  let mouseX;
+  let mouseY;
 
   let tooltip;
 
@@ -32,7 +35,7 @@
     values = Object.entries(teams[0])
       .filter((entry) => entry[0] !== "Year")
       .map(([key, value]) => {
-        return { team: key, score: value };
+        return { team: key, score: value, logo: 'https://loodibee.com/wp-content/uploads/nba-atlanta-hawks-logo-480x480.png' };
       });
 
     const margin = { top: 20, right: 120, bottom: 100, left: 60 };
@@ -60,6 +63,18 @@
       .style("text-anchor", "end");
 
     svg.append("g").call(d3.axisLeft(y));
+
+     svg
+      .selectAll(".logo")
+      .data(values)
+      .enter()
+      .append("svg:image")
+      .attr("xlink:href", (d) => d.logo)
+      .attr("x", (d) => x(d.team) + x.bandwidth() / 2 - 15) // Adjust positioning as needed
+      .attr("y", (d) => y(d.score) - 40) // Adjust positioning as needed
+      .attr("width", 30)
+      .attr("height", 30)
+      .attr("class", "logo");
 
     svg
       .selectAll("rect")
@@ -196,8 +211,23 @@
       .attr("y", (d) => y(d.score))
       .attr("height", (d) => height - y(d.score))
       .attr("fill", "steelblue")
+        logos = svg
+      .selectAll(".logo")
+      .data(values);
+     logos
+      .enter()
+      .append("svg:image")
+      .attr("xlink:href", (d) => d.logo)
+      .attr("x", (d) => x(d.team) + x.bandwidth() / 2 - 15) // Adjust positioning as needed
+      .merge(logos)
+      .transition()
+      .duration(800)
+      .attr("y", (d) => y(d.score)- 40)
+      .attr("height", (d) => y(d.score) - 800)
+      .attr("class", "logo")
       .on("mouseover", (event, d) => {
         tooltip = svg.append("g").attr("class", "tooltip");
+
 
         tooltip
           .append("rect")
