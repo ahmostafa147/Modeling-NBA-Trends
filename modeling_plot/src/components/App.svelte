@@ -35,8 +35,8 @@
         return { team: key, score: value };
       });
 
-    const margin = { top: 20, right: 20, bottom: 100, left: 40 };
-    const width = 1000 - margin.left - margin.right;
+    const margin = { top: 20, right: 120, bottom: 100, left: 60 };
+    const width = 1400 - margin.left - margin.right;
     height = 600 - margin.top - margin.bottom;
 
     svg = d3
@@ -71,42 +71,79 @@
       .attr("width", x.bandwidth())
       .attr("height", (d) => height - y(d.score))
       .attr("fill", "steelblue")
-      .on("mouseover", (event, d) => {
-        tooltip = svg.append("g").attr("class", "tooltip");
+    //   .on("mouseover", (event, d) => {
+    //     tooltip = svg.append("g").attr("class", "tooltip");
 
-        tooltip
-          .append("rect")
-          .attr("width", 130)
-          .attr("height", 60)
-          .attr("fill", "rgba(255, 255, 255, 0.8)")
-          .attr("stroke", "black")
-          .attr("stroke-width", 1);
+    //     tooltip
+    //       .append("rect")
+    //       .attr("width", 130)
+    //       .attr("height", 60)
+    //       .attr("fill", "rgba(255, 255, 255, 0.8)")
+    //       .attr("stroke", "black")
+    //       .attr("stroke-width", 1);
 
-        tooltip
-          .append("text")
-          .attr("x", 15)
-          .attr("y", 20)
-          .attr("dy", "0.35em")
-          .attr("text-anchor", "start")
-          .style("font-size", "12px")
+    //     tooltip
+    //       .append("text")
+    //       .attr("x", 15)
+    //       .attr("y", 20)
+    //       .attr("dy", "0.35em")
+    //       .attr("text-anchor", "start")
+    //       .style("font-size", "12px")
+    //       .text(`${d.team}`);
+
+    //     tooltip
+    //       .append("text")
+    //       .attr("x", 15)
+    //       .attr("y", 40)
+    //       .attr("dy", "0.35em")
+    //       .attr("text-anchor", "start")
+    //       .style("font-size", "12px")
+    //       .text(`PPG: ${d.score}`);
+
+    //     updateTooltipPosition(event);
+    //   })
+    //   .on("mousemove", (event, d) => {
+    //     updateTooltipPosition(event, d);
+    //   })
+    //   .on("mouseout", (event) => {
+    //     svg.select(".tooltip").remove();
+    //   });
+    .on('mouseover', (event, d) => {
+        const tooltipWidth = 120;
+        const tooltipHeight = 60;
+
+        const tooltip = svg.append('g')
+          .attr('class', 'tooltip')
+          .attr('transform', `translate(${x(d.team) + x.bandwidth()}, ${y(d.score)})`);
+
+        tooltip.append('rect')
+          .attr('width', tooltipWidth)
+          .attr('height', tooltipHeight)
+          .attr('fill', 'rgba(255, 255, 255, 0.8)')
+          .attr('stroke', 'black')
+          .attr('stroke-width', 1);
+
+        tooltip.append('text')
+          .attr('x', tooltipWidth / 2)
+          .attr('y', tooltipHeight / 2 - 10)
+          .attr('dy', '0.35em')
+          .attr('text-anchor', 'middle')
+          .style('font-size', '12px')
           .text(`${d.team}`);
-
-        tooltip
-          .append("text")
-          .attr("x", 15)
-          .attr("y", 40)
-          .attr("dy", "0.35em")
-          .attr("text-anchor", "start")
-          .style("font-size", "12px")
+        
+          tooltip.append('text')
+          .attr('x', tooltipWidth / 2)
+          .attr('y', tooltipHeight / 2 + 10)
+          .attr('dy', '0.35em')
+          .attr('text-anchor', 'middle')
+          .style('font-size', '12px')
           .text(`PPG: ${d.score}`);
-
-        updateTooltipPosition(event);
       })
       .on("mousemove", (event, d) => {
         updateTooltipPosition(event, d);
       })
-      .on("mouseout", (event) => {
-        svg.select(".tooltip").remove();
+      .on('mouseout', (event) => {
+        svg.select('.tooltip').remove();
       });
   }
 
@@ -117,13 +154,13 @@
     const mouseX = event.pageX;
     const mouseY = event.pageY;
 
-    tooltip.attr(
-      "transform",
-      `translate(${mouseX - 280}, ${mouseY - tooltipHeight - 170})`,
-    );
     // tooltip.attr(
     //   "transform",
-    //   `translate(${mouseX}, ${mouseY})`,
+    //   `translate(${mouseX - 280}, ${mouseY - tooltipHeight - 170})`,
+    // );
+    // tooltip.attr(
+    //   "transform",
+    //   `translate(${0.5 * mouseX}, ${0.5 * mouseY})`,
     // );
 
     // tooltip.attr('transform', `translate(${mouseX-40}, ${mouseY - tooltipHeight - 10})`);
@@ -170,22 +207,37 @@
           .attr("stroke", "black")
           .attr("stroke-width", 1);
 
-        tooltip
-          .append("text")
-          .attr("x", 15)
-          .attr("y", 20)
-          .attr("dy", "0.35em")
-          .attr("text-anchor", "start")
-          .style("font-size", "12px")
-          .text(`${d.team}`);
+        // tooltip
+        //   .append("text")
+        //   .attr("x", 15)
+        //   .attr("y", 20)
+        //   .attr("dy", "0.35em")
+        //   .attr("text-anchor", "start")
+        //   .style("font-size", "12px")
+        //   .text(`${d.team}`);
 
-        tooltip
-          .append("text")
-          .attr("x", 15)
-          .attr("y", 40)
-          .attr("dy", "0.35em")
-          .attr("text-anchor", "start")
-          .style("font-size", "12px")
+        // tooltip
+        //   .append("text")
+        //   .attr("x", 15)
+        //   .attr("y", 40)
+        //   .attr("dy", "0.35em")
+        //   .attr("text-anchor", "start")
+        //   .style("font-size", "12px")
+        //   .text(`PPG: ${d.score}`);
+        tooltip.append('text')
+          .attr('x', tooltipWidth / 2)
+          .attr('y', tooltipHeight / 2 - 10)
+          .attr('dy', '0.35em')
+          .attr('text-anchor', 'middle')
+          .style('font-size', '12px')
+          .text(`${d.team}`);
+        
+          tooltip.append('text')
+          .attr('x', tooltipWidth / 2)
+          .attr('y', tooltipHeight / 2 + 10)
+          .attr('dy', '0.35em')
+          .attr('text-anchor', 'middle')
+          .style('font-size', '12px')
           .text(`PPG: ${d.score}`);
 
         updateTooltipPosition(event, d);
@@ -196,6 +248,7 @@
       .on("mouseout", (event) => {
         svg.select(".tooltip").remove();
       });
+    
 
     bars.exit().remove();
   }
