@@ -71,19 +71,6 @@
       .attr("width", x.bandwidth())
       .attr("height", (d) => height - y(d.score))
       .attr("fill", "steelblue")
-      //   .on('mouseover', (event, d) => {
-      //     const tooltip = svg.append('text')
-      //       .attr('class', 'tooltip')
-      //       .attr('x', x(d.team) + x.bandwidth() / 2)
-      //       .attr('y', y(d.score) - 5)
-      //       .attr('text-anchor', 'middle')
-      //       .style('font-size', '12px')
-      //       .style('fill', 'black')
-      //       .text(d.score);
-      //   })
-      //   .on('mouseout', (event) => {
-      //     svg.select('.tooltip').remove();
-      //   });
       .on("mouseover", (event, d) => {
         tooltip = svg.append("g").attr("class", "tooltip");
 
@@ -116,14 +103,14 @@
         updateTooltipPosition(event);
       })
       .on("mousemove", (event, d) => {
-        updateTooltipPosition(event);
+        updateTooltipPosition(event, d);
       })
       .on("mouseout", (event) => {
         svg.select(".tooltip").remove();
       });
   }
 
-  function updateTooltipPosition(event) {
+  function updateTooltipPosition(event, d) {
     tooltip = svg.select(".tooltip");
     const tooltipWidth = 100;
     const tooltipHeight = 40;
@@ -132,8 +119,22 @@
 
     tooltip.attr(
       "transform",
-      `translate(${mouseX - 270}, ${mouseY - tooltipHeight - 230})`,
+      `translate(${mouseX - 280}, ${mouseY - tooltipHeight - 170})`,
     );
+    // tooltip.attr(
+    //   "transform",
+    //   `translate(${mouseX}, ${mouseY})`,
+    // );
+
+    // tooltip.attr('transform', `translate(${mouseX-40}, ${mouseY - tooltipHeight - 10})`);
+    // tooltip.select('.text').text(`${event.srcElement.__data__.team}: ${event.srcElement.__data__.score} dsfjhsdk`);
+    // console.log(tooltip.select('.text'))
+    // console.log(event.srcElement.__data__);
+    // console.log(tooltip.selectAll('text'));
+    // const first = tooltip.select('text')
+    // tooltip.select('text').text(`${d.team}: ${d.score}`);
+    tooltip.select('text:nth-child(3)').text(`PPG: ${d.score}`);
+    // tooltip.selectAll('text').text(`${d.team}: ${d.score}`);
   }
 
   function updateBars(newyr) {
@@ -158,7 +159,7 @@
       .attr("y", (d) => y(d.score))
       .attr("height", (d) => height - y(d.score))
       .attr("fill", "steelblue")
-      .on("mouseover", (event) => {
+      .on("mouseover", (event, d) => {
         tooltip = svg.append("g").attr("class", "tooltip");
 
         tooltip
@@ -187,10 +188,10 @@
           .style("font-size", "12px")
           .text(`PPG: ${d.score}`);
 
-        updateTooltipPosition(event);
+        updateTooltipPosition(event, d);
       })
       .on("mousemove", (event, d) => {
-        updateTooltipPosition(event);
+        updateTooltipPosition(event, d);
       })
       .on("mouseout", (event) => {
         svg.select(".tooltip").remove();
