@@ -278,7 +278,8 @@
 
 <main>
   <div id="chart">
-    <h1>NBA Average Point per Game in the Year - {year}</h1>
+    <h1>Is Defense Dying in the NBA?</h1>
+    <h2 style="text-align: left;">NBA Average Points per Game in {year}</h2>
     <div id="overlay">
       <!-- svelte-ignore a11y-label-has-associated-control -->
       <label>{year}</label>
@@ -305,7 +306,7 @@
     position: absolute;
     min-width: 250px;
     width: 15%;
-    top: 10px;
+    top: 180px;
     right: 10px;
     padding: 10px;
     z-index: 3;
@@ -331,13 +332,14 @@
     height: 100vh;
   }
 
-  h1 {
-    font-size: 35px;
-    font-weight: 600;
-    background-image: linear-gradient(to left, #1b0db0, #c82222);
-    color: transparent;
-    background-clip: text;
-    -webkit-background-clip: text;
+  h2 {
+    font-size: 24px;
+    color: #FA8320;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
   }
- 
+
+  h1 {
+    font-size: 36px;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  }
 </style>
