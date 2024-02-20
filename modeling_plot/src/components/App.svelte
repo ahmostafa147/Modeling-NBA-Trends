@@ -6,10 +6,11 @@
   let keys = [];
   let teams = [];
   let values = [];
-  let year = 1946;
+  let year = 1950;
   let interval;
   let playing = false;
-  let maxVal = 150;
+  let minVal = 75;
+  let maxVal = 125;
   let svg;
   let x;
   let y;
@@ -49,7 +50,7 @@
     y = d3
       .scaleLinear()
       .domain([
-        0,
+        minVal,
         maxVal,
       ])
       .range([height, 0]);
@@ -127,10 +128,11 @@
 
 <main>
   <div id="chart"></div>
-  <div>
+  <div id="overlay">
+    <label>{year}</label>
     <input
       type="range"
-      min="1946"
+      min="1950"
       max="2022"
       value={year}
       on:input={(e) => updateYear(+e.target.value)}
@@ -144,5 +146,27 @@
 </main>
 
 <style>
-  /* Add your styles here */
+#overlay {
+	font-size: 0.9em;
+	background-color: rgba(255, 255, 255, 0.4);
+	position: absolute;
+	min-width:250px;
+	width: 15%;
+	top: 10px;
+	right: 10px;
+	padding: 10px;
+	z-index: 3;
+ }
+ input {
+	display: inline-block;
+	width: 100%;
+	position: relative;
+	margin: 0;
+	cursor: pointer;
+ }
+ label {
+	font-size: 1.5em;
+	font-family: sans-serif;
+	font-weight: bold;
+ }
 </style>
