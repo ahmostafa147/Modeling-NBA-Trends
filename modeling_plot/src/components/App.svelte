@@ -100,7 +100,7 @@
         const logo = teamLogos[key];
         return {
           team: key,
-          score: value,
+          score: Math.round((value - minVal) * 100) / 100,
           logo:
             logo ||
             "https://cdn.freebiesupply.com/images/large/2x/nba-logo-transparent.png",
@@ -121,7 +121,7 @@
 
     x = d3.scaleBand().domain(keys).range([0, width]).padding(0.1);
 
-    y = d3.scaleLinear().domain([minVal, maxVal]).range([height, 0]);
+    y = d3.scaleLinear().domain([0, maxVal - minVal]).range([height, 0]);
 
     svg
       .append("g")
@@ -193,7 +193,7 @@
           .attr("dy", "0.35em")
           .attr("text-anchor", "middle")
           .style("font-size", "12px")
-          .text(`PPG: ${d.score}`);
+          .text(`PPG Diff: ${d.score}`);
       })
       .on("mousemove", (event, d) => {
         updateTooltipPosition(event, d);
@@ -218,7 +218,7 @@
       .attr("x", 0 - height / 2)
       .attr("dy", "1em")
       .style("text-anchor", "middle")
-      .text("Average Points Per Game")
+      .text("Average Points Per Game Difference")
       .style(
         "font-family",
         "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
@@ -248,7 +248,7 @@
     // console.log(tooltip.selectAll('text'));
     // const first = tooltip.select('text')
     // tooltip.select('text').text(`${d.team}: ${d.score}`);
-    tooltip.select("text:nth-child(3)").text(`PPG: ${d.score}`);
+    tooltip.select("text:nth-child(3)").text(`PPG Diff: ${d.score}`);
     // tooltip.selectAll('text').text(`${d.team}: ${d.score}`);
   }
 
@@ -258,7 +258,7 @@
     values = Object.entries(teams[0])
       .filter((entry) => entry[0] !== "Year")
       .map(([key, value]) => {
-        return { team: key, score: value };
+        return { team: key, score: Math.round((value - minVal) * 100) / 100};
       });
 
     bars = svg.selectAll("rect").data(values);
@@ -316,7 +316,7 @@
           .attr("dy", "0.35em")
           .attr("text-anchor", "middle")
           .style("font-size", "12px")
-          .text(`PPG: ${d.score}`);
+          .text(`PPG Diff: ${d.score}`);
 
         updateTooltipPosition(event, d);
       })
@@ -362,7 +362,7 @@
         alt="NBA"
       />
     </h1>
-    <h2 style="text-align: left;">NBA Teams Average Points per Game in {year}</h2>
+    <h2 style="text-align: left;">NBA Teams Difference in Average Points per Game in {year} From All Time Lowest Average</h2>
     <div id="overlay">
       <!-- svelte-ignore a11y-label-has-associated-control -->
       <label>{year}</label>
@@ -379,6 +379,42 @@
         <button on:click={play}>Play</button>
       {/if}
     </div>
+  </div>
+  <div>
+    <h3 style="text-align: center;">Write-Up</h3>
+    <p>A common narrative and topic of debate amongst NBA (National Basketball 
+        Association) fans and media is whether teams are scoring too many 
+        points and defense is becoming a smaller part of the game. We decided 
+        to explore this narrative by plotting the average points scored per 
+        game per team over the history of the league, starting from 1950 when 
+        the league only comprised of 8 teams.</p>
+    <p>For our data, we decided to get it from Basketball Reference, a widely 
+        trusted, although not official, source for basketball data amongst NBA 
+        fans and media. We chose to scrape data from Basketball Reference as 
+        opposed to NBA.com, the league’s official source for data, because 
+        Basketball Reference was much easier to get data and the data was 
+        cleaner. Cleaning the data involved filling in zeros for the years 
+        when certain teams did not exist yet. Otherwise, the Basketball 
+        Reference data was clean and easy to work with.</p>
+    <p>Regarding design decisions, we knew we wanted to do a slider to show 
+        data for different years and be able to play it to show the progression 
+        of scoring over the years. As a result, we chose to use a bar chart as 
+        it was an efficient way to display data for all 30 teams (which are 
+        essentially 30 categories) for a single year. On top of each individual 
+        bar, we decided to add the team’s logo. This is a quick and easy way 
+        to identify a team’s bar, if one knows the team logos, without having 
+        to look all the way down to the x-axis on top of helping differentiate 
+        bars when many can have similar values. For each bar, we have a tooltip 
+        that shows the exact points per game (PPG) values for the team being 
+        hovered over. This is helpful as in a bar chart it can be hard to get 
+        an exact value, especially in the wider chart that we have. The tooltip 
+        updates to whatever team it hovers over and the value updates with the 
+        incrementing year as long as one’s mouse is moving. For the font of the 
+        graph and axes titles, we decided to use the impact font as it matches 
+        the font commonly used in NBA graphics on social media and titles of 
+        NBA articles. The color of the bars matches the color of a basketball 
+        to give a bit of additional semantic encoding.</p>
+    <p></p>
   </div>
 </main>
 
