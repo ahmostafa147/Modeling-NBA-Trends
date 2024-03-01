@@ -129,7 +129,8 @@
       .call(d3.axisBottom(x))
       .selectAll("text")
       .attr("transform", "rotate(-45)")
-      .style("text-anchor", "end");
+      .style("text-anchor", "end")
+      .style("font-size", "12px");
 
     svg.append("g").call(d3.axisLeft(y));
 
@@ -209,7 +210,8 @@
       .style(
         "font-family",
         "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
-      );
+      )
+      .style("font-size", "20px");
 
     svg
       .append("text")
@@ -218,11 +220,12 @@
       .attr("x", 0 - height / 2)
       .attr("dy", "1em")
       .style("text-anchor", "middle")
-      .text("Average Points Per Game")
+      .text("Average Points Per Game Difference")
       .style(
         "font-family",
         "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
-      );
+      )
+      .style("font-size", "20px");
   }
 
   function updateTooltipPosition(event, d) {
@@ -362,7 +365,7 @@
         alt="NBA"
       />
     </h1>
-    <h2 style="text-align: left;">NBA Teams Average Points per Game in {year}</h2>
+    <h2 style="text-align: left;">NBA Teams Difference in Average Points per Game in {year} From All Time Lowest Average</h2>
     <div id="overlay">
       <!-- svelte-ignore a11y-label-has-associated-control -->
       <label>{year}</label>
@@ -380,6 +383,7 @@
       {/if}
     </div>
   </div>
+
   <div id="text">
     <h3 style="text-align: left;">Design Process and Decisions</h3>
     <p style="font-size: 24;">A common narrative and topic of debate amongst NBA (National Basketball 
