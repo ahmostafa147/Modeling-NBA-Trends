@@ -15,6 +15,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"d3": "^7.8.5"
+		"d3": "^7.8.5",
+		"svelte-scroller": "^1.2.2"
 	}
 }

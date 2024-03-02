@@ -1,6 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import * as d3 from "d3";
+  
 
   let data = [];
   let keys = [];
@@ -12,6 +13,8 @@
   let minVal = 70;
   let maxVal = 130;
   let svg;
+  let svg1;
+  let svg2;
   let x;
   let y;
   let bars;
@@ -88,6 +91,8 @@
     d3.csv("src/DSC106_NBA.csv").then((csvData) => {
       data = csvData;
       renderBarChart(year);
+      renderBarChart2(1990);
+      renderBarChart3(2022);
     });
   });
 
@@ -354,6 +359,298 @@
     clearInterval(interval);
     playing = false;
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  function renderBarChart2(year) {
+    teams = data.filter((d) => d.Year == year);
+    keys = Object.keys(teams[0]).filter((key) => key !== "Year");
+    values = Object.entries(teams[0])
+      .filter((entry) => entry[0] !== "Year")
+      .map(([key, value]) => {
+        const logo = teamLogos[key];
+        return {
+          team: key,
+          score: value,
+          logo:
+            logo ||
+            "https://cdn.freebiesupply.com/images/large/2x/nba-logo-transparent.png",
+        }; // Provide a default logo URL if not found
+      });
+
+    const margin = { top: 40, right: 120, bottom: 150, left: 60 };
+    const width = 1400 - margin.left - margin.right;
+    height = 600 - margin.top - margin.bottom;
+
+    svg1 = d3
+      .select("#chart2")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    x = d3.scaleBand().domain(keys).range([0, width]).padding(0.1);
+
+    y = d3.scaleLinear().domain([minVal, maxVal]).range([height, 0]);
+
+    svg1
+      .append("g")
+      .attr("transform", `translate(0,${height})`)
+      .call(d3.axisBottom(x))
+      .selectAll("text")
+      .attr("transform", "rotate(-45)")
+      .style("text-anchor", "end")
+      .style("font-size", "12px");
+
+    svg1.append("g").call(d3.axisLeft(y));
+
+    svg1
+      .selectAll(".logo")
+      .data(values)
+      .enter()
+      .append("svg:image")
+      .attr("xlink:href", (d) => d.logo)
+      .attr("x", (d) => x(d.team) + x.bandwidth() / 2 - 15) // Adjust positioning as needed
+      .attr("y", (d) => y(d.score) - 40) // Adjust positioning as needed
+      .attr("width", 30)
+      .attr("height", 30)
+      .attr("class", "logo");
+
+    svg1
+      .selectAll("rect")
+      .data(values)
+      .enter()
+      .append("rect")
+      .attr("x", (d) => x(d.team))
+      .attr("y", (d) => y(d.score))
+      .attr("width", x.bandwidth())
+      .attr("height", (d) => height - y(d.score))
+      .attr("fill", "#FA8320")
+      .attr("stroke", "black")
+      .attr("stroke-width", 2)
+      .on("mouseover", (event, d) => {
+        const tooltipWidth = 120;
+        const tooltipHeight = 60;
+
+        const tooltip = svg1
+          .append("g")
+          .attr("class", "tooltip")
+          .attr(
+            "transform",
+            `translate(${x(d.team) + x.bandwidth()}, ${y(d.score)})`,
+          );
+
+        tooltip
+          .append("rect")
+          .attr("width", tooltipWidth)
+          .attr("height", tooltipHeight)
+          .attr("fill", "rgba(255, 255, 255, 0.8)")
+          .attr("stroke", "black")
+          .attr("stroke-width", 1);
+
+        tooltip
+          .append("text")
+          .attr("x", tooltipWidth / 2)
+          .attr("y", tooltipHeight / 2 - 10)
+          .attr("dy", "0.35em")
+          .attr("text-anchor", "middle")
+          .style("font-size", "12px")
+          .text(`${d.team}`);
+
+        tooltip
+          .append("text")
+          .attr("x", tooltipWidth / 2)
+          .attr("y", tooltipHeight / 2 + 10)
+          .attr("dy", "0.35em")
+          .attr("text-anchor", "middle")
+          .style("font-size", "12px")
+          .text(`PPG: ${d.score}`);
+      })
+      .on("mousemove", (event, d) => {
+        updateTooltipPosition(event, d);
+      })
+      .on("mouseout", (event) => {
+        svg1.select(".tooltip").remove();
+      });
+    svg1
+      .append("text")
+      .attr("transform", `translate(${width / 2}, ${height + 120})`) // Adjust the position as needed
+      .style("text-anchor", "middle")
+      .text("Teams")
+      .style(
+        "font-family",
+        "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
+      )
+      .style("font-size", "20px");
+
+    svg1
+      .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left) // Adjust the position as needed
+      .attr("x", 0 - height / 2)
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Average Points Per Game Difference")
+      .style(
+        "font-family",
+        "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
+      )
+      .style("font-size", "20px");
+  }
+
+
+
+
+  function renderBarChart3(year) {
+    teams = data.filter((d) => d.Year == year);
+    keys = Object.keys(teams[0]).filter((key) => key !== "Year");
+    values = Object.entries(teams[0])
+      .filter((entry) => entry[0] !== "Year")
+      .map(([key, value]) => {
+        const logo = teamLogos[key];
+        return {
+          team: key,
+          score: value,
+          logo:
+            logo ||
+            "https://cdn.freebiesupply.com/images/large/2x/nba-logo-transparent.png",
+        }; // Provide a default logo URL if not found
+      });
+
+    const margin = { top: 40, right: 120, bottom: 150, left: 60 };
+    const width = 1400 - margin.left - margin.right;
+    height = 600 - margin.top - margin.bottom;
+
+    svg2 = d3
+      .select("#chart3")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    x = d3.scaleBand().domain(keys).range([0, width]).padding(0.1);
+
+    y = d3.scaleLinear().domain([minVal, maxVal]).range([height, 0]);
+
+    svg2
+      .append("g")
+      .attr("transform", `translate(0,${height})`)
+      .call(d3.axisBottom(x))
+      .selectAll("text")
+      .attr("transform", "rotate(-45)")
+      .style("text-anchor", "end")
+      .style("font-size", "12px");
+
+    svg2.append("g").call(d3.axisLeft(y));
+
+    svg2
+      .selectAll(".logo")
+      .data(values)
+      .enter()
+      .append("svg:image")
+      .attr("xlink:href", (d) => d.logo)
+      .attr("x", (d) => x(d.team) + x.bandwidth() / 2 - 15) // Adjust positioning as needed
+      .attr("y", (d) => y(d.score) - 40) // Adjust positioning as needed
+      .attr("width", 30)
+      .attr("height", 30)
+      .attr("class", "logo");
+
+    svg2
+      .selectAll("rect")
+      .data(values)
+      .enter()
+      .append("rect")
+      .attr("x", (d) => x(d.team))
+      .attr("y", (d) => y(d.score))
+      .attr("width", x.bandwidth())
+      .attr("height", (d) => height - y(d.score))
+      .attr("fill", "#FA8320")
+      .attr("stroke", "black")
+      .attr("stroke-width", 2)
+      .on("mouseover", (event, d) => {
+        const tooltipWidth = 120;
+        const tooltipHeight = 60;
+
+        const tooltip = svg2
+          .append("g")
+          .attr("class", "tooltip")
+          .attr(
+            "transform",
+            `translate(${x(d.team) + x.bandwidth()}, ${y(d.score)})`,
+          );
+
+        tooltip
+          .append("rect")
+          .attr("width", tooltipWidth)
+          .attr("height", tooltipHeight)
+          .attr("fill", "rgba(255, 255, 255, 0.8)")
+          .attr("stroke", "black")
+          .attr("stroke-width", 1);
+
+        tooltip
+          .append("text")
+          .attr("x", tooltipWidth / 2)
+          .attr("y", tooltipHeight / 2 - 10)
+          .attr("dy", "0.35em")
+          .attr("text-anchor", "middle")
+          .style("font-size", "12px")
+          .text(`${d.team}`);
+
+        tooltip
+          .append("text")
+          .attr("x", tooltipWidth / 2)
+          .attr("y", tooltipHeight / 2 + 10)
+          .attr("dy", "0.35em")
+          .attr("text-anchor", "middle")
+          .style("font-size", "12px")
+          .text(`PPG: ${d.score}`);
+      })
+      .on("mousemove", (event, d) => {
+        updateTooltipPosition(event, d);
+      })
+      .on("mouseout", (event) => {
+        svg2.select(".tooltip").remove();
+      });
+    svg2
+      .append("text")
+      .attr("transform", `translate(${width / 2}, ${height + 120})`) // Adjust the position as needed
+      .style("text-anchor", "middle")
+      .text("Teams")
+      .style(
+        "font-family",
+        "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
+      )
+      .style("font-size", "20px");
+
+    svg2
+      .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left) // Adjust the position as needed
+      .attr("x", 0 - height / 2)
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Average Points Per Game Difference")
+      .style(
+        "font-family",
+        "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
+      )
+      .style("font-size", "20px");
+  }
+
+
 </script>
 
 <main>
@@ -384,6 +681,13 @@
     </div>
   </div>
 
+  <div id = "chart2">
+    <h2 style="text-align: left;">NBA Teams Difference in Average Points per Game in 1990 From All Time Lowest Average</h2>
+  </div>
+  <div id = "chart3">
+    <h2 style="text-align: left;">NBA Teams Difference in Average Points per Game in 2022 From All Time Lowest Average</h2>
+  </div>
+  
   <div id="text">
     <h3 style="text-align: left;">Design Process and Decisions</h3>
     <p style="font-size: 24;">A common narrative and topic of debate amongst NBA (National Basketball 
@@ -522,6 +826,26 @@
     font-weight: bold;
   }
   #chart {
+    background-color: antiquewhite;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+
+  #chart2 {
+    background-color: antiquewhite;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+
+  #chart3 {
     background-color: antiquewhite;
     margin: auto;
     display: flex;
