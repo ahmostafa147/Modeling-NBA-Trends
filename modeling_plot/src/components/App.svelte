@@ -129,7 +129,8 @@
       .call(d3.axisBottom(x))
       .selectAll("text")
       .attr("transform", "rotate(-45)")
-      .style("text-anchor", "end");
+      .style("text-anchor", "end")
+      .style("font-size", "12px");
 
     svg.append("g").call(d3.axisLeft(y));
 
@@ -209,7 +210,8 @@
       .style(
         "font-family",
         "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
-      );
+      )
+      .style("font-size", "20px");
 
     svg
       .append("text")
@@ -222,7 +224,8 @@
       .style(
         "font-family",
         "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
-      );
+      )
+      .style("font-size", "20px");
   }
 
   function updateTooltipPosition(event, d) {
@@ -469,4 +472,11 @@
     left: 0;
     height: 20%;
   }
+  #text {
+      font-size: 18px;
+      margin-left: 40px;
+      margin-right: 40px;
+      text-align: justify;
+      font-family:Arial, Helvetica, sans-serif
+    }
 </style>
