@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import * as d3 from "d3";
 
+
   let data = [];
   let keys = [];
   let teams = [];
